@@ -1,5 +1,5 @@
 node_modules
 .env
+doc.php
 package-lock.json
 .swagger-codegen-ignore
-doc.php
