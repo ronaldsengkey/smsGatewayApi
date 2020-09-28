@@ -1,0 +1,253 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a sample server Petstore server.  You can find out more about\
+    \     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net,\
+    \ #swagger](http://swagger.io/irc/).      For this sample, you can use the api\
+    \ key `special-key` to test the authorization     filters."
+  version: "1.0.0"
+  title: "Swagger Petstore"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "petstore.swagger.io"
+basePath: "/v2"
+tags:
+- name: "pet"
+  description: "Everything about your Pets"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "store"
+  description: "Access to Petstore orders"
+- name: "user"
+  description: "Operations about user"
+  externalDocs:
+    description: "Find out more about our store"
+    url: "http://swagger.io"
+schemes:
+- "https"
+- "http"
+paths:
+  /smssync/{phone_number}:
+    post:
+      tags:
+      - "smssync"
+      summary: "smssync for application"
+      description: ""
+      operationId: "getMessage"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "phone_number"
+        in: "path"
+        description: "phone number"
+        required: true
+        type: "string"
+      - name: "task"
+        in: "query"
+        description: "message task"
+        required: false
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: false
+        schema:
+          $ref: "#/definitions/Message"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
+      x-swagger-router-controller: "Smssync"
+    get:
+      tags:
+      - "smssync"
+      summary: "smssync for application"
+      description: ""
+      operationId: "sentTask"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "phone_number"
+        in: "path"
+        description: "phone number"
+        required: true
+        type: "string"
+      - name: "task"
+        in: "query"
+        description: "message task"
+        required: false
+        type: "string"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
+      x-swagger-router-controller: "Smssync"
+  
+  /users:
+    post:
+      tags:
+      - "user"
+      summary: "user for dashboard"
+      description: ""
+      operationId: "createUser"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: false
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
+      x-swagger-router-controller: "User"
+    get:
+      tags:
+      - "smssync"
+      summary: "smssync for application"
+      description: ""
+      operationId: "getUser"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/xml"
+      - "application/json"
+      # parameters:
+      # - name: "task"
+      #   in: "query"
+      #   description: "message task"
+      #   required: false
+      #   type: "string"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
+      x-swagger-router-controller: "User"
+      
+  /api/success:
+    post:
+      tags:
+      - "user"
+      summary: "user for dashboard"
+      description: ""
+      operationId: "createUser"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: false
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "405":
+          description: "Invalid input"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
+      x-swagger-router-controller: "User"
+
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Message:
+    type: "object"
+    # required:
+    #   - "from"
+    #   - "message"
+    #   - "secret"
+    properties:
+      from:
+        type: "string"
+      message: 
+        type: "string"
+      secret:
+        type: "string"
+  User:
+    type: "object"
+    # required:
+    #   - "username"
+    #   - "email"
+    #   - "complete_name"
+    properties:
+      username:
+        type: "string"
+      password: 
+        type: "string"
+      email:
+        type: "string"
+      complete_name:
+        type: "string"
+      type:
+        type: "string"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+    example:
+      code: 0
+      type: "type"
+      message: "message"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

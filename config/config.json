@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "root",
+    "password": "UKPZen1234!",
+    "database": "app",
+    "port": "7206",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "db_sms",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "db_sms",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
