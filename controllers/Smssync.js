@@ -13,10 +13,10 @@ module.exports.getMessage = async function getMessage (req, res, next) {
     console.log("task: ", task);
     console.log("body: ", body);
     if (task == 'result') {
-        response = Message.getSmsDeliveryReport(body);
+        response = await Message.getSmsDeliveryReport(body);
     }
     else if (task == 'sent') {
-        response = Message.getSentMessageUuids(body);
+        response = await Message.getSentMessageUuids(body);
     }
     else {
         response = await Message.getMessage(body);
