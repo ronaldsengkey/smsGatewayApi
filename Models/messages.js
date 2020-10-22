@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     message_id: DataTypes.STRING,
     type: DataTypes.BOOLEAN,
     status: DataTypes.BOOLEAN,
+    read: DataTypes.BOOLEAN
   }, {
     timestamps: false,
     sequelize,

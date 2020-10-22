@@ -151,7 +151,8 @@ async function saveDataMessages(data){
         sent_to: data.sent_to,
         message_id: data.message_id,
         type: data.type,
-        status: data.status
+        status: data.status,
+        read: 0
     }});
     console.log("newMessage: ", JSON.stringify(newMessage.dataValues));
 }
