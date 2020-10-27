@@ -21,6 +21,14 @@ var options = {
 var spec = fs.readFileSync(path.join(__dirname,'api/swagger.yaml'), 'utf8');
 var swaggerDoc = jsyaml.safeLoad(spec);
 
+const CronJob = require('cron').CronJob;
+const cronService = require('./service/CronService')
+let job1 = new CronJob('0 */1 * * * *', async function() {
+  console.log('cronjob-1: ', new Date());
+  cronService.deleteExpiredMessage();
+}, null, true, 'Asia/Jakarta'); 
+job1.start();
+
 // Initialize the Swagger middleware
 swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
 

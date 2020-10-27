@@ -1,6 +1,7 @@
 'use strict';
 const uuid = require('uuid');
 const model = require('../Models/index');
+const dateFormat = require('dateformat');
 
 exports.getMessage = async function getMessage(data){
     console.log("getMessage: ", data, new Date().toLocaleTimeString());
@@ -23,12 +24,18 @@ exports.getMessage = async function getMessage(data){
             error = "The secret value sent from the device does not match the one on the server";
         }
         else {
-            success = true;
-            data.phone_id = id;
-            data.status = '1';
-            data.type = '1';
-            await saveDataMessages(data)
-            console.log("data: ", data);
+            console.log("data.sent_timestamp::", dateFormat(new Date(Number(data.sent_timestamp)), "yyyy-mm-dd"), dateFormat(new Date(), "yyyy-mm-dd"));
+            if (dateFormat(new Date(Number(data.sent_timestamp)), "yyyy-mm-dd") == dateFormat(new Date(), "yyyy-mm-dd")) {
+                success = true;
+                data.phone_id = id;
+                data.status = '1';
+                data.type = '1';
+                await saveDataMessages(data)
+                // console.log("data: ", data);    
+            }
+            else {
+                error = "Old Message"
+            }
         }
     }
     
@@ -143,18 +150,43 @@ exports.sendMessagesUuidsForSmsDeliveryReport = async function sendMessagesUuids
 
 async function saveDataMessages(data){
     console.log("saveDataMessages: ", new Date().toLocaleTimeString());
-    const newMessage = await model.messages.findOrCreate({where: {
+    let newMessage = {};
+    if (!await isMessageExist({
         phone_id: data.phone_id,
         from: data.from,
         message: data.message,
         sent_timestamp: data.sent_timestamp,
         sent_to: data.sent_to,
-        message_id: data.message_id,
         type: data.type,
         status: data.status,
         read: 0
-    }});
-    console.log("newMessage: ", JSON.stringify(newMessage.dataValues));
+    })) {
+        newMessage = await model.messages.findOrCreate({where: {
+            phone_id: data.phone_id,
+            from: data.from,
+            message: data.message,
+            sent_timestamp: data.sent_timestamp,
+            sent_to: data.sent_to,
+            message_id: data.message_id,
+            type: data.type,
+            status: data.status,
+            read: 0
+        }});
+    }
+    console.log("newMessage::", JSON.stringify(newMessage));
+}
+
+async function isMessageExist(param){
+    return model.messages.count({ where: param })
+        .then(count => {
+        console.log("isMessageExist::", count);
+        if (count < 1) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    });
 }
 
 async function updateDataMessages(data){
